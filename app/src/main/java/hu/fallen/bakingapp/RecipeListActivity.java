@@ -69,7 +69,7 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     private void fetchRecipes() {
-        String recipesUrl = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+        String recipesUrl = getString(R.string.recipes_url);
         StringRequest request = new StringRequest(Request.Method.GET,
                 recipesUrl,
                 new Response.Listener<String>() {
