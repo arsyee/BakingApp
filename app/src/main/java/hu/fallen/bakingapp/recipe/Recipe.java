@@ -83,4 +83,8 @@ public class Recipe implements Parcelable {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
 }

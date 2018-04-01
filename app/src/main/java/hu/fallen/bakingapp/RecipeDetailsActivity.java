@@ -8,13 +8,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import hu.fallen.bakingapp.recipe.Ingredient;
 import hu.fallen.bakingapp.recipe.Recipe;
 import hu.fallen.bakingapp.recipe.Step;
 
@@ -67,21 +67,28 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             mRecipe = incomingIntent.getParcelableExtra(ARG_ITEM);
         }
 
+        setTitle(mRecipe.getName());
+
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView, mRecipe == null ? null : mRecipe.getSteps());
+        if (mRecipe != null) {
+            setupRecyclerView((RecyclerView) recyclerView, mRecipe.getSteps(), mRecipe.getIngredients());
+        }
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<Step> items) {
-        mAdapter = new SimpleItemRecyclerViewAdapter(this, items, mTwoPane);
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<Step> steps, List<Ingredient> ingredients) {
+        mAdapter = new SimpleItemRecyclerViewAdapter(this, steps, ingredients, mTwoPane);
         recyclerView.setAdapter(mAdapter);
     }
 
     public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+            extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        private static final int VIEW_TYPE_INGREDIENTS = 0;
+        private static final int VIEW_TYPE_STEP = 1;
         private final RecipeDetailsActivity mParentActivity;
         private List<Step> mValues;
+        private List<Ingredient> mIngredients;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -107,38 +114,73 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(RecipeDetailsActivity parent,
                                       List<Step> items,
+                                      List<Ingredient> ingredients,
                                       boolean twoPane) {
             mValues = items;
+            mIngredients = ingredients;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.step_list_content, parent, false);
-            return new ViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case VIEW_TYPE_INGREDIENTS:
+                    return new IngredientsViewHolder(LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.ingredients_content, parent, false));
+                case VIEW_TYPE_STEP:
+                    return new StepViewHolder(LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.step_list_content, parent, false));
+                default:
+                    throw new UnsupportedOperationException(String.format("Unexpected viewtype: %d", viewType));
+            }
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(String.format(Locale.getDefault(), "%d", mValues.get(position).getId()));
-            holder.mContentView.setText(mValues.get(position).getShortDescription());
+        public void onBindViewHolder(final RecyclerView.ViewHolder rvHolder, int position) {
+            switch (getItemViewType(position)) {
+                case VIEW_TYPE_INGREDIENTS:
+                    IngredientsViewHolder iHolder = (IngredientsViewHolder) rvHolder;
+                    iHolder.mContent.setText(TextUtils.join("\n", mIngredients));
+                    break;
+                case VIEW_TYPE_STEP:
+                    StepViewHolder sHolder = (StepViewHolder) rvHolder;
+                    Step step = mValues.get(position-1);
+                    sHolder.mIdView.setText(String.format(Locale.getDefault(), "%d", step.getId()));
+                    sHolder.mContentView.setText(step.getShortDescription());
 
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+                    sHolder.itemView.setTag(step);
+                    sHolder.itemView.setOnClickListener(mOnClickListener);
+                    break;
+                default:
+                    throw new UnsupportedOperationException(String.format("Unexpected viewtype: %d", getItemViewType(position)));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mValues == null ? 0 : mValues.size();
+            return mValues == null ? 0 : mValues.size() + 1;
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) return VIEW_TYPE_INGREDIENTS;
+            return VIEW_TYPE_STEP;
+        }
+
+        class IngredientsViewHolder extends RecyclerView.ViewHolder {
+            final TextView mContent;
+            IngredientsViewHolder(View view) {
+                super(view);
+                mContent = (TextView) view.findViewById(R.id.content);
+            }
+        }
+
+        class StepViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
 
-            ViewHolder(View view) {
+            StepViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.Locale;
 
-class Ingredient implements Parcelable {
+public class Ingredient implements Parcelable {
     private double quantity;
     private String measure;
     private String ingredient;
