@@ -2,9 +2,12 @@ package hu.fallen.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -102,6 +105,15 @@ public class RecipeListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         mAdapter = new SimpleItemRecyclerViewAdapter(this, null);
         recyclerView.setAdapter(mAdapter);
+        Configuration config = getResources().getConfiguration();
+        Log.d(TAG, String.format("Setting up layoutManager: %d %d (%d x %d)", config.orientation, config.smallestScreenWidthDp, config.screenWidthDp, config.screenHeightDp));
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE && config.screenWidthDp >= 900) {
+            Log.d(TAG, "gridLayout");
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        } else {
+            Log.d(TAG, "linearLayout");
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -145,7 +157,7 @@ public class RecipeListActivity extends AppCompatActivity {
             holder.mIdView.setText(String.format(Locale.getDefault(), "%d", recipe.getId()));
             holder.mContentView.setText(recipe.getName());
             String contentDescription = mParentActivity.getString(R.string.recipe_image_description, recipe.getName());
-            Log.d(TAG, String.format("ContentDescription set to: %s", contentDescription));
+            // Log.d(TAG, String.format("ContentDescription set to: %s", contentDescription));
             holder.mImageView.setContentDescription(contentDescription);
             try {
                 Picasso.get().load(recipe.getImage()).resize(75, 75).centerCrop().into(holder.mImageView);
