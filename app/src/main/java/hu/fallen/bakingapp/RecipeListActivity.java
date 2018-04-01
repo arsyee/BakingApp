@@ -24,11 +24,11 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import hu.fallen.bakingapp.dummy.DummyContent;
 import hu.fallen.bakingapp.recipe.Recipe;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * An activity representing a list of Recipes. This activity
@@ -46,6 +46,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
     private Gson gson;
+    private SimpleItemRecyclerViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class RecipeListActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseRecipes(response);
+                        parseRecipesAndUpdate(response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -102,30 +103,32 @@ public class RecipeListActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    private void parseRecipes(String response) {
+    private void parseRecipesAndUpdate(String response) {
         List<Recipe> recipes = Arrays.asList(gson.fromJson(response, Recipe[].class));
         for (Recipe recipe : recipes) {
             Log.d(TAG, String.format("Recipe found: %s", recipe));
         }
+        mAdapter.setValues(recipes);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        mAdapter = new SimpleItemRecyclerViewAdapter(this, null, mTwoPane);
+        recyclerView.setAdapter(mAdapter);
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final RecipeListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private List<Recipe> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                Recipe item = (Recipe) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(RecipeDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putParcelable(RecipeDetailFragment.ARG_ITEM, item);
                     RecipeDetailFragment fragment = new RecipeDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -134,7 +137,7 @@ public class RecipeListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(RecipeDetailFragment.ARG_ITEM, item);
 
                     context.startActivity(intent);
                 }
@@ -142,11 +145,16 @@ public class RecipeListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<Recipe> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+        }
+
+        void setValues(List<Recipe> recipes) {
+            mValues = recipes;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -158,8 +166,8 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(String.format(Locale.getDefault(), "%d", mValues.get(position).getId()));
+            holder.mContentView.setText(mValues.get(position).getName());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -167,7 +175,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return mValues == null ? 0 : mValues.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
