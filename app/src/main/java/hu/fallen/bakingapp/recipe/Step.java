@@ -3,7 +3,7 @@ package hu.fallen.bakingapp.recipe;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-class Step implements Parcelable {
+public class Step implements Parcelable {
     private int id;
     private String shortDescription;
     private String description;
@@ -42,5 +42,13 @@ class Step implements Parcelable {
         dest.writeString(description);
         dest.writeString(videoURL);
         dest.writeString(thumbailURL);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
     }
 }

@@ -71,4 +71,8 @@ public class Recipe implements Parcelable {
         dest.writeInt(servings);
         dest.writeString(image);
     }
+
+    public List<Step> getSteps() {
+        return steps;
+    }
 }

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,25 +24,15 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import hu.fallen.bakingapp.recipe.Recipe;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * An activity representing a list of Recipes. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link RecipeDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
+import hu.fallen.bakingapp.recipe.Recipe;
+
 public class RecipeListActivity extends AppCompatActivity {
 
     private String TAG = RecipeListActivity.class.getSimpleName();
-
-    private boolean mTwoPane;
 
     private RequestQueue requestQueue;
     private Gson gson;
@@ -51,7 +41,7 @@ public class RecipeListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list);
+        setContentView(R.layout.activity_recipe_details);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,14 +55,6 @@ public class RecipeListActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        if (findViewById(R.id.recipe_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
 
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
@@ -112,7 +94,7 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mAdapter = new SimpleItemRecyclerViewAdapter(this, null, mTwoPane);
+        mAdapter = new SimpleItemRecyclerViewAdapter(this, null);
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -121,35 +103,21 @@ public class RecipeListActivity extends AppCompatActivity {
 
         private final RecipeListActivity mParentActivity;
         private List<Recipe> mValues;
-        private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Recipe item = (Recipe) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putParcelable(RecipeDetailFragment.ARG_ITEM, item);
-                    RecipeDetailFragment fragment = new RecipeDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, RecipeDetailActivity.class);
-                    intent.putExtra(RecipeDetailFragment.ARG_ITEM, item);
-
-                    context.startActivity(intent);
-                }
+                Context context = view.getContext();
+                Intent intent = new Intent(context, RecipeDetailsActivity.class);
+                intent.putExtra(RecipeDetailsActivity.ARG_ITEM, item);
+                context.startActivity(intent);
             }
         };
 
         SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<Recipe> items,
-                                      boolean twoPane) {
+                                      List<Recipe> items) {
             mValues = items;
             mParentActivity = parent;
-            mTwoPane = twoPane;
         }
 
         void setValues(List<Recipe> recipes) {

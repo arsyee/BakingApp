@@ -14,14 +14,14 @@ import android.view.MenuItem;
  * An activity representing a single Recipe detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link RecipeListActivity}.
+ * in a {@link RecipeDetailsActivity}.
  */
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeStepActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_detail);
+        setContentView(R.layout.activity_recipe_step);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,9 +53,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putParcelable(RecipeDetailFragment.ARG_ITEM,
-                    getIntent().getParcelableExtra(RecipeDetailFragment.ARG_ITEM));
-            RecipeDetailFragment fragment = new RecipeDetailFragment();
+            arguments.putParcelable(RecipeStepFragment.ARG_ITEM,
+                    getIntent().getParcelableExtra(RecipeStepFragment.ARG_ITEM));
+            RecipeStepFragment fragment = new RecipeStepFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.recipe_detail_container, fragment)
@@ -73,7 +73,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, RecipeListActivity.class));
+            navigateUpTo(new Intent(this, RecipeDetailsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
