@@ -74,30 +74,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         Intent incomingIntent = getIntent();
         if (incomingIntent.hasExtra(ARG_ITEM)) {
-            Log.d(TAG, "incomingIntent.hasExtra(ARG_ITEM)");
             mRecipe = incomingIntent.getParcelableExtra(ARG_ITEM);
-        } else if (savedInstanceState != null) {
-            Log.d(TAG, "restoring instance state");
-            mRecipe = savedInstanceState.getParcelable(ARG_ITEM);
         }
-        Log.d(TAG, String.format("onCreate details, mRecipe is %s", mRecipe));
 
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView, mRecipe == null ? null : mRecipe.getSteps());
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.d(TAG, "onSaveInstanceState called");
-        outState.putParcelable(ARG_ITEM, mRecipe);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.d(TAG, String.format("onRestoreInstanceState called: %s", savedInstanceState));
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<Step> items) {
