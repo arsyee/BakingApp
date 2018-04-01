@@ -9,13 +9,25 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import hu.fallen.bakingapp.dummy.DummyContent;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import hu.fallen.bakingapp.dummy.DummyContent;
+import hu.fallen.bakingapp.recipe.Recipe;
+
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,11 +40,12 @@ import java.util.List;
  */
 public class RecipeListActivity extends AppCompatActivity {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
+    private String TAG = RecipeListActivity.class.getSimpleName();
+
     private boolean mTwoPane;
+
+    private RequestQueue requestQueue;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +76,37 @@ public class RecipeListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.recipe_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        gson = new GsonBuilder().create();
+
+        requestQueue = Volley.newRequestQueue(this);
+        fetchRecipes();
+    }
+
+    private void fetchRecipes() {
+        String recipesUrl = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+        StringRequest request = new StringRequest(Request.Method.GET,
+                recipesUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        parseRecipes(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, String.format("VolleyError: %s", error));
+                    }
+                });
+        requestQueue.add(request);
+    }
+
+    private void parseRecipes(String response) {
+        List<Recipe> recipes = Arrays.asList(gson.fromJson(response, Recipe[].class));
+        for (Recipe recipe : recipes) {
+            Log.d(TAG, String.format("Recipe found: %s", recipe));
+        }
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
