@@ -57,6 +57,10 @@ public class Recipe implements Parcelable {
         return name;
     }
 
+    public String getImage() {
+        return image;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -74,5 +78,9 @@ public class Recipe implements Parcelable {
 
     public List<Step> getSteps() {
         return steps;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

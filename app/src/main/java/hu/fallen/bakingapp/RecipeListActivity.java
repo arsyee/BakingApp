@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +34,7 @@ import hu.fallen.bakingapp.recipe.Recipe;
 
 public class RecipeListActivity extends AppCompatActivity {
 
-    private String TAG = RecipeListActivity.class.getSimpleName();
+    private static String TAG = RecipeListActivity.class.getSimpleName();
 
     private RequestQueue requestQueue;
     private Gson gson;
@@ -89,6 +91,21 @@ public class RecipeListActivity extends AppCompatActivity {
         List<Recipe> recipes = Arrays.asList(gson.fromJson(response, Recipe[].class));
         for (Recipe recipe : recipes) {
             Log.d(TAG, String.format("Recipe found: %s", recipe));
+            if (getResources().getBoolean(R.bool.testing)) { // Add images to recipes for testing
+                switch (recipe.getName()) {
+                    case "Nutella Pie":
+                        recipe.setImage("blah, blah"); // not even a url
+                        break;
+                    case "Yellow Cake":
+                        recipe.setImage("https://en.wikipedia.org/wiki/Yellowcake"); // url, but not a pic
+                        break;
+                    case "Brownies":
+                        recipe.setImage("https://i1.wp.com/www.briana-thomas.com/wp-content/uploads/2018/01/Cream-Cheese-Chocolate-Chip-Brownie-Cake.jpg?w=2000&ssl=1");
+                        break;
+                    default:
+                        // keep original
+                }
+            }
         }
         mAdapter.setValues(recipes);
     }
@@ -134,26 +151,38 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(String.format(Locale.getDefault(), "%d", mValues.get(position).getId()));
-            holder.mContentView.setText(mValues.get(position).getName());
+            position = position % mValues.size();
+            Recipe recipe = mValues.get(position);
+            holder.mIdView.setText(String.format(Locale.getDefault(), "%d", recipe.getId()));
+            holder.mContentView.setText(recipe.getName());
+            String contentDescription = mParentActivity.getString(R.string.recipe_image_description, recipe.getName());
+            Log.d(TAG, String.format("ContentDescription set to: %s", contentDescription));
+            holder.mImageView.setContentDescription(contentDescription);
+            try {
+                Picasso.get().load(recipe.getImage()).resize(75, 75).centerCrop().into(holder.mImageView);
+            } catch (Exception e) {
+                Log.d(TAG, String.format("Image not found: %s", e.getMessage()));
+            }
 
-            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setTag(recipe);
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues == null ? 0 : mValues.size();
+            return mValues == null ? 0 : mValues.size() * (mParentActivity.getResources().getBoolean(R.bool.testing) ? 10 : 1);
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
+            final ImageView mImageView;
 
             ViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
+                mImageView = (ImageView) view.findViewById(R.id.image);
             }
         }
     }
