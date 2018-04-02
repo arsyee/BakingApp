@@ -17,7 +17,9 @@ import android.widget.TextView;
 import hu.fallen.bakingapp.recipe.Ingredient;
 import hu.fallen.bakingapp.recipe.Recipe;
 import hu.fallen.bakingapp.recipe.Step;
+import hu.fallen.bakingapp.utilities.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -141,7 +143,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             switch (getItemViewType(position)) {
                 case VIEW_TYPE_INGREDIENTS:
                     IngredientsViewHolder iHolder = (IngredientsViewHolder) rvHolder;
-                    iHolder.mContent.setText(TextUtils.join("\n", mIngredients));
+                    iHolder.mContent.setText(StringUtils.getFormattedIngredients(mParentActivity, mIngredients));
                     break;
                 case VIEW_TYPE_STEP:
                     StepViewHolder sHolder = (StepViewHolder) rvHolder;

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="Test test" />
+        tools:text="2 cups coffee" />
 
     <TextView
         android:id="@+id/steps_title"

@@ -7,4 +7,33 @@
     <string name="ingredients">Ingredients</string>
     <string name="recipes_url" translatable="false">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
     <string name="instructions">Instructions</string>
+
+    <plurals name="G">
+        <item quantity="one">gram</item>
+        <item quantity="other">grams</item>
+    </plurals>
+    <plurals name="K">
+        <item quantity="one">kilogram</item>
+        <item quantity="other">kilograms</item>
+    </plurals>
+    <plurals name="OZ">
+        <item quantity="one">ounce</item>
+        <item quantity="other">ounces</item>
+    </plurals>
+    <plurals name="CUP">
+        <item quantity="one">cup</item>
+        <item quantity="other">cups</item>
+    </plurals>
+    <plurals name="UNIT">
+        <item quantity="one" />
+        <item quantity="other" />
+    </plurals>
+    <plurals name="TBLSP">
+        <item quantity="one">tablespoon</item>
+        <item quantity="other">tablespoons</item>
+    </plurals>
+    <plurals name="TSP">
+        <item quantity="one">teaspoon</item>
+        <item quantity="other">teaspoons</item>
+    </plurals>
 </resources>
