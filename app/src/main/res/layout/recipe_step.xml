@@ -6,9 +6,14 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/step_player"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
     <TextView
         android:id="@+id/recipe_media_url"
-        style="?android:attr/textAppearanceLarge"
+        style="?android:attr/textAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
