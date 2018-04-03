@@ -55,9 +55,6 @@ public class RecipeStepFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
             mItem = (Step) getArguments().getParcelable(ARG_ITEM);
 
             Activity activity = this.getActivity();
@@ -86,14 +83,12 @@ public class RecipeStepFragment extends Fragment {
     private void initializePlayer(Context context,  Uri uri) {
         mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector(), new DefaultLoadControl());
         mPlayerView.setPlayer(mExoPlayer);
-        // COMPLETED (7): Prepare the MediaSource using DefaultDataSourceFactory and DefaultExtractorsFactory, as well as the Sample URI you passed in.
         MediaSource mediaSource = new ExtractorMediaSource(
                 uri,
                 new DefaultDataSourceFactory(context, Util.getUserAgent(context, "ClassicalMusicQuiz")),
                 new DefaultExtractorsFactory(),
                 null,
                 null);
-        // COMPLETED (8): Prepare the ExoPlayer with the MediaSource, start playing the sample and set the SimpleExoPlayer to the SimpleExoPlayerView.
         mExoPlayer.prepare(mediaSource);
         mExoPlayer.setPlayWhenReady(true);
     }
