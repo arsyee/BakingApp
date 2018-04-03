@@ -94,9 +94,9 @@ public class RecipeStepFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onPause() {
         mExoPlayer.stop();
         mExoPlayer.release();
-        super.onDestroy();
+        super.onPause();
     }
 }
