@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -14,7 +15,7 @@ public class Recipe implements Parcelable {
     private int id;
     private String name;
     private List<Ingredient> ingredients;
-    private List<Step> steps;
+    private ArrayList<Step> steps;
     private int servings;
     private String image;
 
@@ -26,7 +27,10 @@ public class Recipe implements Parcelable {
         ingredients = Arrays.asList(Arrays.copyOf(pIngredients, pIngredients.length, Ingredient[].class));
 
         Parcelable[] pSteps = in.readParcelableArray(Step.class.getClassLoader());
-        steps = Arrays.asList(Arrays.copyOf(pSteps, pSteps.length, Step[].class));
+        steps = new ArrayList<Step>();
+        for (Parcelable step : pSteps) {
+            steps.add((Step) step);
+        }
 
         servings = in.readInt();
         image = in.readString();
@@ -76,7 +80,7 @@ public class Recipe implements Parcelable {
         dest.writeString(image);
     }
 
-    public List<Step> getSteps() {
+    public ArrayList<Step> getSteps() {
         return steps;
     }
 

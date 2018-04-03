@@ -7,6 +7,8 @@
     <string name="ingredients">Ingredients</string>
     <string name="recipes_url" translatable="false">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
     <string name="instructions">Instructions</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
 
     <plurals name="G">
         <item quantity="one">gram</item>
