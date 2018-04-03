@@ -42,6 +42,8 @@ public class RecipeStepFragment extends Fragment {
     private Step mItem;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
+    private Context context;
+    private Uri uri;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -81,22 +83,36 @@ public class RecipeStepFragment extends Fragment {
     }
 
     private void initializePlayer(Context context,  Uri uri) {
+        this.context = context;
+        this.uri = uri;
         mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector(), new DefaultLoadControl());
         mPlayerView.setPlayer(mExoPlayer);
         MediaSource mediaSource = new ExtractorMediaSource(
                 uri,
-                new DefaultDataSourceFactory(context, Util.getUserAgent(context, "ClassicalMusicQuiz")),
+                new DefaultDataSourceFactory(context, Util.getUserAgent(context, "Baking App")),
                 new DefaultExtractorsFactory(),
                 null,
                 null);
         mExoPlayer.prepare(mediaSource);
+        mExoPlayer.seekTo(currentPosition);
         mExoPlayer.setPlayWhenReady(true);
     }
 
+    private long currentPosition = 0;
+
     @Override
     public void onPause() {
+        mExoPlayer.setPlayWhenReady(false);
+        currentPosition = mExoPlayer.getCurrentPosition();
         mExoPlayer.stop();
         mExoPlayer.release();
         super.onPause();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (currentPosition != 0) initializePlayer(context, uri);
+    }
+
 }
