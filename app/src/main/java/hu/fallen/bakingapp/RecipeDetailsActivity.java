@@ -44,6 +44,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate() called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
@@ -93,8 +94,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     public void updateWidgets(View view) {
         Intent intent = new Intent(IngredientsWidget.ACTION_RECIPE_CHANGED);
-        intent.putExtra(IngredientsWidget.RECIPE_NAME, mRecipe.getName());
-        intent.putExtra(IngredientsWidget.RECIPE_INGREDIENTS, StringUtils.getFormattedIngredients(this, mRecipe.getIngredients()));
+        intent.putExtra(RecipeDetailsActivity.ARG_ITEM, mRecipe);
         getApplicationContext().sendBroadcast(intent);
         Log.d(TAG, String.format("updateWidgets sent broadcast: %s", intent.getAction()));
     }
