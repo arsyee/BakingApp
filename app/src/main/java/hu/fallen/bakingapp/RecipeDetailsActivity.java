@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         intent.putExtra(RecipeStepFragment.ARG_ITEM, step);
         intent.putParcelableArrayListExtra(RecipeStepActivity.STEPS, steps);
         context.startActivity(intent);
+    }
+
+    public void updateWidgets(View view) {
+        Intent intent = new Intent(IngredientsWidget.ACTION_RECIPE_CHANGED);
+        intent.putExtra(IngredientsWidget.RECIPE_NAME, "blah, blah");
+        intent.putExtra(IngredientsWidget.RECIPE_INGREDIENTS, "blah, blah, blah");
+        getApplicationContext().sendBroadcast(intent);
+        Log.d(TAG, String.format("updateWidgets sent broadcast: %s", intent.getAction()));
     }
 
     public static class SimpleItemRecyclerViewAdapter

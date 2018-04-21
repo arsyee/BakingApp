@@ -48,6 +48,7 @@
         <receiver android:name=".IngredientsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="hu.fallen.bakingapp.RECIPE_CHANGED" />
             </intent-filter>
 
             <meta-data
