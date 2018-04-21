@@ -38,4 +38,6 @@
         <item quantity="one">teaspoon</item>
         <item quantity="other">teaspoons</item>
     </plurals>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
