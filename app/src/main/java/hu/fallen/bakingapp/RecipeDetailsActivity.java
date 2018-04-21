@@ -93,8 +93,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     public void updateWidgets(View view) {
         Intent intent = new Intent(IngredientsWidget.ACTION_RECIPE_CHANGED);
-        intent.putExtra(IngredientsWidget.RECIPE_NAME, "blah, blah");
-        intent.putExtra(IngredientsWidget.RECIPE_INGREDIENTS, "blah, blah, blah");
+        intent.putExtra(IngredientsWidget.RECIPE_NAME, mRecipe.getName());
+        intent.putExtra(IngredientsWidget.RECIPE_INGREDIENTS, StringUtils.getFormattedIngredients(this, mRecipe.getIngredients()));
         getApplicationContext().sendBroadcast(intent);
         Log.d(TAG, String.format("updateWidgets sent broadcast: %s", intent.getAction()));
     }
