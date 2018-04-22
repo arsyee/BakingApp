@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -36,13 +38,15 @@ import hu.fallen.bakingapp.recipe.Recipe;
 
 public class RecipeListActivity extends AppCompatActivity {
 
-    private static String TAG = RecipeListActivity.class.getSimpleName();
+    private static final String TAG = RecipeListActivity.class.getSimpleName();
+    private static final String RV_POSITION = "rv_position";
 
     private RequestQueue requestQueue;
     private Gson gson;
     private SimpleItemRecyclerViewAdapter mAdapter;
 
     public CountingIdlingResource countingIdlingResource = new CountingIdlingResource(RecipeListActivity.class.getSimpleName());
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,24 +57,42 @@ public class RecipeListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        View recyclerView = findViewById(R.id.recipe_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        mRecyclerView = findViewById(R.id.recipe_list);
+
+        setupRecyclerView(mRecyclerView);
 
         gson = new GsonBuilder().create();
 
         requestQueue = Volley.newRequestQueue(this);
-        fetchRecipes();
+        int position = savedInstanceState == null ? 0 : savedInstanceState.getInt(RV_POSITION, 0);
+        fetchRecipes(position);
     }
 
-    private void fetchRecipes() {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState() called");
+        super.onSaveInstanceState(outState);
+        if (mRecyclerView != null) {
+            int firstVisible = 0;
+            if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                firstVisible = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            }
+            if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
+                firstVisible = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            }
+            Log.d(TAG, String.format("osSaveInstanceState() saves %s as %d", RV_POSITION, firstVisible));
+            outState.putInt(RV_POSITION, firstVisible);
+        }
+    }
+
+    private void fetchRecipes(final int position) {
         String recipesUrl = getString(R.string.recipes_url);
         StringRequest request = new StringRequest(Request.Method.GET,
                 recipesUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        parseRecipesAndUpdate(response);
+                        parseRecipesAndUpdate(response, position);
                     }
                 },
                 new Response.ErrorListener() {
@@ -84,10 +106,10 @@ public class RecipeListActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    private void parseRecipesAndUpdate(String response) {
+    private void parseRecipesAndUpdate(String response, int firstVisible) {
         List<Recipe> recipes = Arrays.asList(gson.fromJson(response, Recipe[].class));
         for (Recipe recipe : recipes) {
-            Log.d(TAG, String.format("Recipe found: %s", recipe));
+            // Log.d(TAG, String.format("Recipe found: %s", recipe));
             if (getResources().getBoolean(R.bool.testing)) { // Add images to recipes for testing
                 switch (recipe.getName()) {
                     case "Nutella Pie":
@@ -105,6 +127,8 @@ public class RecipeListActivity extends AppCompatActivity {
             }
         }
         mAdapter.setValues(recipes);
+        mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, firstVisible);
+        Log.d(TAG, String.format("Restoring scrolling position: %d", firstVisible));
         countingIdlingResource.decrement();
     }
 
@@ -177,7 +201,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mValues == null ? 0 : mValues.size();
+            return mValues == null ? 0 : mValues.size() * (mParentActivity.getResources().getBoolean(R.bool.testing) ? 10 : 1);
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
