@@ -32,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 @LargeTest
 public class RecipeListActivityTest {
 
+    @SuppressWarnings("unchecked")
     @Rule
     public final IntentsTestRule<RecipeListActivity> mIntentsRule =
             new IntentsTestRule(RecipeListActivity.class);
