@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -28,6 +29,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import hu.fallen.bakingapp.recipe.Step;
 
@@ -49,6 +51,7 @@ public class RecipeStepFragment extends Fragment {
     private Step mItem;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
+    private ImageView mImageView;
     private Context context;
     private Uri uri;
 
@@ -90,6 +93,11 @@ public class RecipeStepFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(mItem.getDescription());
             mPlayerView = rootView.findViewById(R.id.step_player);
             initializePlayer(rootView.getContext(), Uri.parse(mItem.getVideoURL()));
+            mImageView = rootView.findViewById(R.id.step_image);
+            try {
+                Picasso.get().load(mItem.getThumbnailURL()).into(mImageView);
+                mImageView.setVisibility(View.VISIBLE);
+            } catch (Exception e) {}
         }
 
         return rootView;

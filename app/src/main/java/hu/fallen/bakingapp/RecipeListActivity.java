@@ -114,6 +114,7 @@ public class RecipeListActivity extends AppCompatActivity {
                 switch (recipe.getName()) {
                     case "Nutella Pie":
                         recipe.setImage("blah, blah"); // not even a url
+                        recipe.getSteps().get(1).setThumbnailURL("https://i1.wp.com/www.briana-thomas.com/wp-content/uploads/2018/01/Cream-Cheese-Chocolate-Chip-Brownie-Cake.jpg?w=2000&ssl=1");
                         break;
                     case "Yellow Cake":
                         recipe.setImage("https://en.wikipedia.org/wiki/Yellowcake"); // url, but not a pic
