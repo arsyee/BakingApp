@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import hu.fallen.bakingapp.recipe.Ingredient;
 import hu.fallen.bakingapp.recipe.Recipe;
@@ -41,6 +42,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private SimpleItemRecyclerViewAdapter mAdapter;
     private Recipe mRecipe;
+
+    private Toast mToast = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +100,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         intent.putExtra(RecipeDetailsActivity.ARG_ITEM, mRecipe);
         getApplicationContext().sendBroadcast(intent);
         Log.d(TAG, String.format("updateWidgets sent broadcast: %s", intent.getAction()));
+        if (mToast != null) mToast.cancel();
+        mToast = Toast.makeText(this, getString(R.string.widget_update_toast, mRecipe.getName()), Toast.LENGTH_LONG);
+        mToast.show();
     }
 
     public static class SimpleItemRecyclerViewAdapter
