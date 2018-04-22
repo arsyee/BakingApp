@@ -40,7 +40,7 @@ public class IngredientsWidget extends AppWidgetProvider {
             Log.d(TAG, String.format("reopening recipe: %s", recipe.getName()));
         } else {
             intent = new Intent(context, RecipeListActivity.class);
-            Log.d(TAG, String.format("opening recipe list"));
+            Log.d(TAG, "opening recipe list");
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         views.setOnClickPendingIntent(R.id.ingredients_widget, pendingIntent);

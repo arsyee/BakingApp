@@ -174,15 +174,16 @@ public class RecipeListActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
+        @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recipe_list_content, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             position = position % mValues.size();
             Recipe recipe = mValues.get(position);
             holder.mIdView.setText(String.format(Locale.getDefault(), "%d", recipe.getId()));

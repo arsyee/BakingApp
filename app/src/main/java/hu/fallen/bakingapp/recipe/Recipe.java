@@ -27,7 +27,7 @@ public class Recipe implements Parcelable {
         ingredients = Arrays.asList(Arrays.copyOf(pIngredients, pIngredients.length, Ingredient[].class));
 
         Parcelable[] pSteps = in.readParcelableArray(Step.class.getClassLoader());
-        steps = new ArrayList<Step>();
+        steps = new ArrayList<>();
         for (Parcelable step : pSteps) {
             steps.add((Step) step);
         }

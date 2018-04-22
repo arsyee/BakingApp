@@ -155,8 +155,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             mTwoPane = twoPane;
         }
 
+        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             switch (viewType) {
                 case VIEW_TYPE_INGREDIENTS:
                     return new IngredientsViewHolder(LayoutInflater.from(parent.getContext())
@@ -170,7 +171,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final RecyclerView.ViewHolder rvHolder, int position) {
+        public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder rvHolder, int position) {
             switch (getItemViewType(position)) {
                 case VIEW_TYPE_INGREDIENTS:
                     IngredientsViewHolder iHolder = (IngredientsViewHolder) rvHolder;
