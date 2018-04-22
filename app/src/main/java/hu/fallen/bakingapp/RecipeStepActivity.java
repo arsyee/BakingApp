@@ -29,6 +29,7 @@ public class RecipeStepActivity extends AppCompatActivity {
     private Step prev;
     private Step next;
     private ArrayList<Step> steps;
+    private Step step;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class RecipeStepActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            Step step = (Step) getIntent().getParcelableExtra(RecipeStepFragment.ARG_ITEM);
+            step = getIntent().getParcelableExtra(RecipeStepFragment.ARG_ITEM);
             arguments.putParcelable(RecipeStepFragment.ARG_ITEM, step);
             RecipeStepFragment fragment = new RecipeStepFragment();
             fragment.setArguments(arguments);
@@ -67,16 +68,30 @@ public class RecipeStepActivity extends AppCompatActivity {
                     .commit();
 
             steps = getIntent().getParcelableArrayListExtra(RecipeStepActivity.STEPS);
-            for (int i = 0; i < steps.size(); ++i) {
-                if (steps.get(i).getId() == step.getId()) {
-                    if (i > 0) {
-                        prev = steps.get(i - 1);
-                        prevButton.setEnabled(true);
-                    }
-                    if (i < steps.size() - 1) {
-                        next = steps.get(i + 1);
-                        nextButton.setEnabled(true);
-                    }
+        } else {
+            step = savedInstanceState.getParcelable(RecipeStepFragment.ARG_ITEM);
+            steps = savedInstanceState.getParcelableArrayList(RecipeStepActivity.STEPS);
+        }
+        setupButtons(prevButton, nextButton);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RecipeStepFragment.ARG_ITEM, step);
+        outState.putParcelableArrayList(RecipeStepActivity.STEPS, steps);
+    }
+
+    private void setupButtons(Button prevButton, Button nextButton) {
+        for (int i = 0; i < steps.size(); ++i) {
+            if (steps.get(i).getId() == step.getId()) {
+                if (i > 0) {
+                    prev = steps.get(i - 1);
+                    prevButton.setEnabled(true);
+                }
+                if (i < steps.size() - 1) {
+                    next = steps.get(i + 1);
+                    nextButton.setEnabled(true);
                 }
             }
         }
