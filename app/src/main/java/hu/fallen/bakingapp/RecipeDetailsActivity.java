@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,6 +37,7 @@ import java.util.Locale;
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     public static final String ARG_ITEM = "item";
+    private static final String RV_POSITION = "rv_position";
     private String TAG = RecipeDetailsActivity.class.getSimpleName();
 
     private boolean mTwoPane;
@@ -44,6 +46,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private Recipe mRecipe;
 
     private Toast mToast = null;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,16 +79,25 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         setTitle(mRecipe.getName());
 
-        View recyclerView = findViewById(R.id.recipe_list);
-        assert recyclerView != null;
+        mRecyclerView = findViewById(R.id.recipe_list);
+        assert mRecyclerView != null;
         if (mRecipe != null) {
-            setupRecyclerView((RecyclerView) recyclerView, mRecipe.getSteps(), mRecipe.getIngredients());
+            int position = savedInstanceState == null ? 0 : savedInstanceState.getInt(RV_POSITION, 0);
+            setupRecyclerView(mRecyclerView, mRecipe.getSteps(), mRecipe.getIngredients(), position);
         }
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<Step> steps, List<Ingredient> ingredients) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int firstVisible = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();;
+        outState.putInt(RV_POSITION, firstVisible);
+    }
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<Step> steps, List<Ingredient> ingredients, int position) {
         mAdapter = new SimpleItemRecyclerViewAdapter(this, steps, ingredients, mTwoPane);
         recyclerView.setAdapter(mAdapter);
+        recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null, position);
     }
 
     public static void showStep(Context context, Step step, ArrayList<Step> steps) {
