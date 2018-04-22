@@ -19,8 +19,6 @@ public class IngredientsWidget extends AppWidgetProvider {
 
     private static final String TAG = AppWidgetProvider.class.getSimpleName();
     public static final String ACTION_RECIPE_CHANGED = "android.appwidget.action.APPWIDGET_UPDATE"; // "hu.fallen.bakingapp.RECIPE_CHANGED";
-    public static final String RECIPE_NAME = "recipe_name";
-    public static final String RECIPE_INGREDIENTS = "recipe_ingredients";
 
     private Recipe mRecipe = null;
 

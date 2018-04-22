@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class Recipe implements Parcelable {
-    private static final String TAG = Recipe.class.getSimpleName();
 
-    private int id;
-    private String name;
-    private List<Ingredient> ingredients;
-    private ArrayList<Step> steps;
-    private int servings;
+    private final int id;
+    private final String name;
+    private final List<Ingredient> ingredients;
+    private final ArrayList<Step> steps;
+    private final int servings;
     private String image;
 
     private Recipe(Parcel in) {

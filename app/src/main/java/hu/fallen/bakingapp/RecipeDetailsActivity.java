@@ -37,7 +37,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     public static final String ARG_ITEM = "item";
     private static final String RV_POSITION = "rv_position";
-    private String TAG = RecipeDetailsActivity.class.getSimpleName();
+    private final String TAG = RecipeDetailsActivity.class.getSimpleName();
 
     private boolean mTwoPane;
 
@@ -107,6 +107,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    @SuppressWarnings("unused")
     public void updateWidgets(View view) {
         Intent intent = new Intent(IngredientsWidget.ACTION_RECIPE_CHANGED);
         intent.putExtra(RecipeDetailsActivity.ARG_ITEM, mRecipe);
@@ -123,8 +124,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         private static final int VIEW_TYPE_INGREDIENTS = 0;
         private static final int VIEW_TYPE_STEP = 1;
         private final RecipeDetailsActivity mParentActivity;
-        private ArrayList<Step> mValues;
-        private List<Ingredient> mIngredients;
+        private final ArrayList<Step> mValues;
+        private final List<Ingredient> mIngredients;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override

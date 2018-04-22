@@ -33,7 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.*;
 public class RecipeListActivityTest {
 
     @Rule
-    public IntentsTestRule<RecipeListActivity> mIntentsRule =
+    public final IntentsTestRule<RecipeListActivity> mIntentsRule =
             new IntentsTestRule(RecipeListActivity.class);
 
     @Before

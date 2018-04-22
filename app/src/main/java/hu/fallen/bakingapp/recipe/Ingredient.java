@@ -6,9 +6,9 @@ import android.os.Parcelable;
 import java.util.Locale;
 
 public class Ingredient implements Parcelable {
-    private double quantity;
-    private String measure;
-    private String ingredient;
+    private final double quantity;
+    private final String measure;
+    private final String ingredient;
 
     Ingredient(Parcel in) {
         quantity = in.readDouble();

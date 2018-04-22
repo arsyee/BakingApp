@@ -43,7 +43,7 @@ public class RecipeListActivity extends AppCompatActivity {
     private Gson gson;
     private SimpleItemRecyclerViewAdapter mAdapter;
 
-    public CountingIdlingResource countingIdlingResource = new CountingIdlingResource(RecipeListActivity.class.getSimpleName());
+    public final CountingIdlingResource countingIdlingResource = new CountingIdlingResource(RecipeListActivity.class.getSimpleName());
     private RecyclerView mRecyclerView;
 
     @Override
@@ -132,7 +132,7 @@ public class RecipeListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        mAdapter = new SimpleItemRecyclerViewAdapter(this, null);
+        mAdapter = new SimpleItemRecyclerViewAdapter(this);
         recyclerView.setAdapter(mAdapter);
         Configuration config = getResources().getConfiguration();
         Log.d(TAG, String.format("Setting up layoutManager: %d %d (%d x %d)", config.orientation, config.smallestScreenWidthDp, config.screenWidthDp, config.screenHeightDp));
@@ -161,9 +161,8 @@ public class RecipeListActivity extends AppCompatActivity {
             }
         };
 
-        SimpleItemRecyclerViewAdapter(RecipeListActivity parent,
-                                      List<Recipe> items) {
-            mValues = items;
+        SimpleItemRecyclerViewAdapter(RecipeListActivity parent) {
+            mValues = null;
             mParentActivity = parent;
         }
 
