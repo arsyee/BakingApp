@@ -51,7 +51,6 @@ public class RecipeStepFragment extends Fragment {
     private Step mItem;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-    private ImageView mImageView;
     private Context context;
     private Uri uri;
 
@@ -93,7 +92,7 @@ public class RecipeStepFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.recipe_detail)).setText(mItem.getDescription());
             mPlayerView = rootView.findViewById(R.id.step_player);
             initializePlayer(rootView.getContext(), Uri.parse(mItem.getVideoURL()));
-            mImageView = rootView.findViewById(R.id.step_image);
+            ImageView mImageView = rootView.findViewById(R.id.step_image);
             try {
                 Picasso.get().load(mItem.getThumbnailURL()).into(mImageView);
                 mImageView.setVisibility(View.VISIBLE);

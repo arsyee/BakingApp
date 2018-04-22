@@ -26,7 +26,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:context="hu.fallen.bakingapp.RecipeDetailsActivity"
         tools:listitem="@layout/step_list_content" />
 
@@ -34,6 +34,7 @@
         android:id="@+id/recipe_detail_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        tools:ignore="InconsistentLayout" />
 
 </LinearLayout>

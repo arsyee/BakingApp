@@ -42,7 +42,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     private boolean mTwoPane;
 
-    private SimpleItemRecyclerViewAdapter mAdapter;
     private Recipe mRecipe;
 
     private Toast mToast = null;
@@ -96,7 +95,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<Step> steps, List<Ingredient> ingredients, int position) {
-        mAdapter = new SimpleItemRecyclerViewAdapter(this, steps, ingredients, mTwoPane);
+        SimpleItemRecyclerViewAdapter mAdapter = new SimpleItemRecyclerViewAdapter(this, steps, ingredients, mTwoPane);
         recyclerView.setAdapter(mAdapter);
         recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null, position);
         Log.d(TAG, String.format("Restoring scrolling position: %d", position));

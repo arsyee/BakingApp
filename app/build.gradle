@@ -19,12 +19,12 @@ android {
 }
 
 ext {
-    supportVersion = '27.1.0'
+    supportVersion = '27.1.1'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:$supportVersion"
+    implementation "com.android.support:exifinterface:$supportVersion"
     implementation "com.android.support:support-v4:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:design:$supportVersion"
