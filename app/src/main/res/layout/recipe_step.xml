@@ -12,16 +12,6 @@
         android:layout_height="250dp" />
 
     <TextView
-        android:id="@+id/recipe_media_url"
-        style="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        tools:context=".RecipeStepFragment"
-        tools:text="Example step" />
-
-    <TextView
         android:id="@+id/recipe_detail"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
