@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class RecipeStepFragment extends Fragment {
     public static final String ARG_ITEM = "item";
     private static final String PLAYER_POSITION = "player_position";
     private static final String PLAYER_STATE = "play_when_ready";
+    private static final String TAG = RecipeStepFragment.class.getSimpleName();
 
     private Step mItem;
     private SimpleExoPlayer mExoPlayer;
@@ -96,7 +98,9 @@ public class RecipeStepFragment extends Fragment {
             try {
                 Picasso.get().load(mItem.getThumbnailURL()).into(mImageView);
                 mImageView.setVisibility(View.VISIBLE);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Log.d(TAG, "Picasso failed to load image, leaving it gone.");
+            }
         }
 
         return rootView;
