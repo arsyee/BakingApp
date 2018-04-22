@@ -10,7 +10,7 @@ public class Step implements Parcelable {
     private String videoURL;
     private String thumbnailURL;
 
-    protected Step(Parcel in) {
+    Step(Parcel in) {
         id = in.readInt();
         shortDescription = in.readString();
         description = in.readString();

@@ -118,7 +118,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         mToast.show();
     }
 
-    public static class SimpleItemRecyclerViewAdapter
+    static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int VIEW_TYPE_INGREDIENTS = 0;
