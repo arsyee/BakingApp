@@ -92,12 +92,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         int firstVisible = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();;
         outState.putInt(RV_POSITION, firstVisible);
+        Log.d(TAG, String.format("osSaveInstanceState() saves %s as %d", RV_POSITION, firstVisible));
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, ArrayList<Step> steps, List<Ingredient> ingredients, int position) {
         mAdapter = new SimpleItemRecyclerViewAdapter(this, steps, ingredients, mTwoPane);
         recyclerView.setAdapter(mAdapter);
         recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null, position);
+        Log.d(TAG, String.format("Restoring scrolling position: %d", position));
     }
 
     public static void showStep(Context context, Step step, ArrayList<Step> steps) {
