@@ -89,7 +89,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        int firstVisible = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();;
+        int firstVisible = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         outState.putInt(RV_POSITION, firstVisible);
         Log.d(TAG, String.format("osSaveInstanceState() saves %s as %d", RV_POSITION, firstVisible));
     }
