@@ -91,7 +91,7 @@ public class RecipeListActivityTest {
             RecyclerView.Adapter adapter = recyclerView.getAdapter();
             assertTrue(String.format("Assertion failed: %d > %d", adapter.getItemCount(), index), adapter.getItemCount() > index);
             ViewGroup card = (ViewGroup) recyclerView.findViewHolderForAdapterPosition(index).itemView;
-            TextView nameView = (TextView) card.findViewById(R.id.content);
+            TextView nameView = card.findViewById(R.id.content);
             assertEquals(cakeName, nameView.getText());
         }
     }

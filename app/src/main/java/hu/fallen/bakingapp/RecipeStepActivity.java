@@ -35,7 +35,7 @@ public class RecipeStepActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
         Button prevButton = findViewById(R.id.bt_prev);
         Button nextButton = findViewById(R.id.bt_next);
         setSupportActionBar(toolbar);

@@ -72,7 +72,7 @@ public class RecipeStepFragment extends Fragment {
         playWhenReady  = savedInstanceState == null || savedInstanceState.getBoolean(PLAYER_STATE, true);
 
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM)) {
-            mItem = (Step) getArguments().getParcelable(ARG_ITEM);
+            mItem = getArguments().getParcelable(ARG_ITEM);
 
             Activity activity = this.getActivity();
             if (activity == null) return;
