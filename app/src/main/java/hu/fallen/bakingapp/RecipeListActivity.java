@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +42,8 @@ public class RecipeListActivity extends AppCompatActivity {
     private Gson gson;
     private SimpleItemRecyclerViewAdapter mAdapter;
 
+    public CountingIdlingResource countingIdlingResource = new CountingIdlingResource(RecipeListActivity.class.getSimpleName());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +77,10 @@ public class RecipeListActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(TAG, String.format("VolleyError: %s", error));
+                        countingIdlingResource.decrement();
                     }
                 });
+        countingIdlingResource.increment();
         requestQueue.add(request);
     }
 
@@ -100,6 +105,7 @@ public class RecipeListActivity extends AppCompatActivity {
             }
         }
         mAdapter.setValues(recipes);
+        countingIdlingResource.decrement();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -171,7 +177,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mValues == null ? 0 : mValues.size() * (mParentActivity.getResources().getBoolean(R.bool.testing) ? 10 : 1);
+            return mValues == null ? 0 : mValues.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
